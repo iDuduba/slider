@@ -1,0 +1,25 @@
+server:
+    port: 8080
+    context-path: /api    
+  
+spring:
+  jackson:
+    serialization-inclusion: NON_NULL
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  http:      
+    encoding.charset: UTF-8  
+    encoding.enable: true  
+    encoding.force: true 
+  datasource:
+    url: jdbc:oracle:thin:@202.120.188.175:20002:orcl
+    username: coast
+    password: coast
+
+
+api:
+  version: 1.2
+  secretKey: '[5)JL\">jTD$B+!mP`tM|eS^E-_#03gHa?v{nC<wq'
+  skipSign: true
+
+  
