@@ -15,6 +15,10 @@ spring:
     url: jdbc:oracle:thin:@202.120.188.175:20002:orcl
     username: coast
     password: coast
+  cache:
+    type: guava
+    cache-names: foo,bar
+    guava.spec: maximumSize=500,expireAfterAccess=600s
 
 
 api:

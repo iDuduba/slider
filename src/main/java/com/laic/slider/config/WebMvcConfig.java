@@ -9,6 +9,7 @@ import com.laic.slider.web.interceptor.ExecuteTimeInterceptor;
 import com.laic.slider.web.interceptor.SecurityInterceptor;
 import org.apache.catalina.filters.RemoteIpFilter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -20,6 +21,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
  * @since 2015-12-19 16:16
  */
 @Configuration
+@EnableCaching
 public class WebMvcConfig extends WebMvcConfigurerAdapter {
 
 	@Autowired
