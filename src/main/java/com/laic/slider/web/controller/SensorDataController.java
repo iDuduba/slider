@@ -7,10 +7,12 @@ import com.laic.slider.api.model.*;
 import com.laic.slider.api.request.CommonRequest;
 import com.laic.slider.api.response.CommonResponse;
 import com.laic.slider.api.response.DataResponse;
+import com.laic.slider.api.response.HelloResponse;
 import com.laic.slider.api.service.HumidistatService;
 import com.laic.slider.api.service.InclinometerService;
 import com.laic.slider.api.service.PressureService;
 import com.laic.slider.api.service.RaingaugeService;
+import com.laic.slider.config.VersionConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +33,9 @@ import java.util.List;
 @RestController
 @CacheConfig(cacheNames = "foo")
 public class SensorDataController extends BaseController{
+
+    @Autowired
+    private VersionConfig versionConfig;
 
     @Autowired
     private RaingaugeService raingaugeService;
@@ -140,9 +145,16 @@ public class SensorDataController extends BaseController{
     }
 
     @RequestMapping(value = "/hello")
-    public CommonResponse hello(@Value("#{request.getAttribute('data')}") String data) {
+    public HelloResponse hello(@Value("#{request.getAttribute('data')}") String data) {
 
-        CommonResponse response = new CommonResponse(CodeEnum.SUCCESS);
+        HelloResponse response = new HelloResponse();
+        response.setResponse(CodeEnum.SUCCESS);
+
+        response.add("serverApiVersion", versionConfig.getVersion());
+        response.add("scmRevision", versionConfig.getRevision());
+        response.add("scmTime", versionConfig.getTimestamp());
+        response.add("active", ""+versionConfig.getFoo().isActive());
+
         return response;
     }
 

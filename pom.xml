@@ -141,6 +141,10 @@
 		</plugins>
 	</build>
 
+	<scm>
+		<connection>scm:git:https://github.com/iDuduba/slider.git</connection>
+	</scm>
+
 	<profiles>
 		<profile>
 			<id>develop</id>
@@ -227,6 +231,25 @@
 								</goals>
 							</execution>
 						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>buildnumber-maven-plugin</artifactId>
+						<version>1.4</version>
+						<executions>
+							<execution>
+								<phase>validate</phase>
+								<goals>
+									<goal>create</goal>
+								</goals>
+							</execution>
+						</executions>
+						<configuration>
+							<doCheck>false</doCheck>
+							<doUpdate>false</doUpdate>
+							<shortRevisionLength>5</shortRevisionLength>
+							<revisionOnScmFailure>12345</revisionOnScmFailure>
+						</configuration>
 					</plugin>
 				</plugins>
 			</build>
