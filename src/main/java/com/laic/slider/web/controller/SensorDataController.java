@@ -3,12 +3,16 @@ package com.laic.slider.web.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageInfo;
 import com.laic.slider.api.enums.CodeEnum;
-import com.laic.slider.api.model.Raingauge;
+import com.laic.slider.api.model.*;
 import com.laic.slider.api.request.CommonRequest;
 import com.laic.slider.api.response.CommonResponse;
 import com.laic.slider.api.response.DataResponse;
+import com.laic.slider.api.service.HumidistatService;
+import com.laic.slider.api.service.InclinometerService;
+import com.laic.slider.api.service.PressureService;
 import com.laic.slider.api.service.RaingaugeService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheConfig;
@@ -27,16 +31,26 @@ import java.util.List;
 @Slf4j
 @RestController
 @CacheConfig(cacheNames = "foo")
-public class SensorDataController {
+public class SensorDataController extends BaseController{
 
     @Autowired
     private RaingaugeService raingaugeService;
+
+    @Autowired
+    private PressureService pressureService;
+
+    @Autowired
+    private HumidistatService humidistatService;
+
+    @Autowired
+    private InclinometerService inclinometerService;
 
     @Cacheable
     @RequestMapping(value = "/rains")
     public DataResponse<Raingauge> rain(@Value("#{request.getAttribute('data')}") String data) {
 
         CommonRequest request = JSONObject.parseObject(data, CommonRequest.class);
+        validate(request);
 
         List<Raingauge> rs = raingaugeService.getAll(
                 request.getBeginTime(),
@@ -45,7 +59,83 @@ public class SensorDataController {
                 request.getRows());
 
         DataResponse<Raingauge> response = new DataResponse<>();
-        response.setPageInfo(new PageInfo<Raingauge>(rs));
+        PageInfo pageInfo = new PageInfo<Raingauge>(rs);
+        Page page = new Page();
+        BeanUtils.copyProperties(pageInfo, page);
+        response.setPage(page);
+        response.setRows(rs);
+        //response.setPageInfo(new PageInfo<Raingauge>(rs));
+        response.setResponse(CodeEnum.SUCCESS);
+        return response;
+    }
+
+    @RequestMapping(value = "/pressures")
+    public DataResponse<Pressure> pressure(@Value("#{request.getAttribute('data')}") String data) {
+
+        CommonRequest request = JSONObject.parseObject(data, CommonRequest.class);
+        validate(request);
+
+        List<Pressure> rs = pressureService.getAll(
+                request.getBeginTime(),
+                request.getEndTime(),
+                request.getPage(),
+                request.getRows());
+
+        DataResponse<Pressure> response = new DataResponse<>();
+        PageInfo pageInfo = new PageInfo<Pressure>(rs);
+        Page page = new Page();
+        BeanUtils.copyProperties(pageInfo, page);
+        response.setPage(page);
+        response.setRows(rs);
+
+        response.setResponse(CodeEnum.SUCCESS);
+        return response;
+    }
+
+    @RequestMapping(value = "/humidistats")
+    public DataResponse<Humidistat> humidistat(@Value("#{request.getAttribute('data')}") String data) {
+
+        CommonRequest request = JSONObject.parseObject(data, CommonRequest.class);
+        validate(request);
+
+        List<Humidistat> rs = humidistatService.getAll(
+                request.getBeginTime(),
+                request.getEndTime(),
+                request.getPage(),
+                request.getRows());
+
+        DataResponse<Humidistat> response = new DataResponse<>();
+//        response.setPageInfo(new PageInfo<Humidistat>(rs));
+        PageInfo pageInfo = new PageInfo<Humidistat>(rs);
+        Page page = new Page();
+        BeanUtils.copyProperties(pageInfo, page);
+        response.setPage(page);
+        response.setRows(rs);
+
+        response.setResponse(CodeEnum.SUCCESS);
+        return response;
+    }
+
+    @RequestMapping(value = "/inclinometers")
+    public DataResponse<Inclinometer> inclinometer(@Value("#{request.getAttribute('data')}") String data) {
+
+        CommonRequest request = JSONObject.parseObject(data, CommonRequest.class);
+        validate(request);
+
+        List<Inclinometer> rs = inclinometerService.getAll(
+                request.getBeginTime(),
+                request.getEndTime(),
+                request.getPage(),
+                request.getRows());
+
+        DataResponse<Inclinometer> response = new DataResponse<>();
+//        response.setPageInfo(new PageInfo<Inclinometer>(rs));
+        PageInfo pageInfo = new PageInfo<Inclinometer>(rs);
+        Page page = new Page();
+        BeanUtils.copyProperties(pageInfo, page);
+        response.setPage(page);
+        response.setRows(rs);
+
         response.setResponse(CodeEnum.SUCCESS);
         return response;
     }

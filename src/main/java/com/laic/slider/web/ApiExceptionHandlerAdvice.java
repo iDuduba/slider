@@ -3,6 +3,7 @@ package com.laic.slider.web;
 import com.alibaba.fastjson.JSONException;
 import com.laic.slider.api.enums.CodeEnum;
 import com.laic.slider.api.response.CommonResponse;
+import com.laic.slider.exception.InvalidRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -26,6 +27,16 @@ public class ApiExceptionHandlerAdvice {
 	    log.error(Throwables.getRootCause(ex).getMessage());
 
 		CommonResponse error = new CommonResponse(CodeEnum.FAIL);
+		return error;
+	}
+
+	@ExceptionHandler(value = InvalidRequestException.class)
+	@ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)
+	@ResponseBody
+	protected CommonResponse handleInvalidRequestException(Exception ex, WebRequest request) {
+		log.error(Throwables.getRootCause(ex).getMessage());
+		CommonResponse error = new CommonResponse(CodeEnum.REQUEST_ERROR);
+		error.setRespMsg(ex.getLocalizedMessage());
 		return error;
 	}
 

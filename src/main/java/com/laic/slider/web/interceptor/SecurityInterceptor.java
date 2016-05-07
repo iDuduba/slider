@@ -42,7 +42,7 @@ public class SecurityInterceptor extends HandlerInterceptorAdapter {
 			return false;
 		}
 		String decodedData = URLDecoder.decode(data,"UTF-8");
-		log.debug("New request : {}", decodedData);
+		log.debug(">>> {} : {}", request.getRequestURI(), decodedData);
 
 		request.setAttribute("data", URLDecoder.decode(data,"UTF-8"));
 
