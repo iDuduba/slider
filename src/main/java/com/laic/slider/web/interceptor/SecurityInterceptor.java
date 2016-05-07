@@ -43,8 +43,7 @@ public class SecurityInterceptor extends HandlerInterceptorAdapter {
 		}
 		String decodedData = URLDecoder.decode(data,"UTF-8");
 		log.debug(">>> {} : {}", request.getRequestURI(), decodedData);
-
-		request.setAttribute("data", URLDecoder.decode(data,"UTF-8"));
+		request.setAttribute("data", decodedData);
 
 		if (!skipSign) {
 			String appid = request.getParameter("appid");
