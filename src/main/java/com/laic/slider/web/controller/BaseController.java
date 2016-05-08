@@ -8,6 +8,7 @@ import org.springframework.validation.Errors;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import javax.validation.metadata.ConstraintDescriptor;
+import java.util.Properties;
 import java.util.Set;
 
 @Slf4j
@@ -23,17 +24,21 @@ public class BaseController {
         Set<ConstraintViolation<T>> violations = validator.validate(target);
         if(violations.size() > 0) {
             String exceptionMessage = "";
+            Properties e = new Properties();
             for(ConstraintViolation<T> violation : violations) {
                 ConstraintDescriptor<?> test = violation.getConstraintDescriptor();
                 String propertyPath = violation.getPropertyPath().toString();
                 String message = violation.getMessage();
+                e.setProperty(propertyPath, message);
                 if(errors != null) {
                     errors.rejectValue(propertyPath, "", message);
                 }
                 exceptionMessage = String.format("%s[%s]", message, propertyPath);
 //                log.error("{}", exceptionMessage);
             }
-            throw new InvalidRequestException(exceptionMessage);
+            InvalidRequestException ex = new InvalidRequestException(exceptionMessage);
+            ex.setErrors(e);
+            throw ex;
         }
     }
 
