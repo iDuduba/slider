@@ -31,6 +31,7 @@ public class CommonRequest extends BaseRequest {
     @Min(1)
     private Integer page;
 
+    @Min(1)
     @Max(500)
     private Integer rows;
 
