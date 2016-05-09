@@ -73,10 +73,7 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
 			//重写writeInternal方法，在返回内容前进行国际化
 			@Override
 			protected void writeInternal(Object object, Type type, HttpOutputMessage outputMessage) throws IOException, HttpMessageNotWritableException {
-				if(object instanceof HelloResponse) {
-					HelloResponse o = (HelloResponse)object;
-					o.getProperties().put("i18n", "Are you here?");
-				}
+				// Todo : add else
 				super.writeInternal(object, type, outputMessage);
 			}
 		};
