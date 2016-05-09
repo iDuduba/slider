@@ -5,6 +5,8 @@
 
 package com.laic.slider.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.laic.slider.api.response.HelloResponse;
 import com.laic.slider.web.interceptor.ExecuteTimeInterceptor;
 import com.laic.slider.web.interceptor.SecurityInterceptor;
 import org.apache.catalina.filters.RemoteIpFilter;
@@ -12,10 +14,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpOutputMessage;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.HttpMessageNotWritableException;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+
+import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.List;
 
 /**
  * @author dly
@@ -50,5 +60,25 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
     public RemoteIpFilter remoteIpFilter() {
         return new RemoteIpFilter();
     }
-	
+
+	@Override
+	public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
+		converters.add(mappingJackson2HttpMessageConverter());
+		super.configureMessageConverters(converters);
+	}
+
+	@Bean
+	public MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter() {
+		return new MappingJackson2HttpMessageConverter() {
+			//重写writeInternal方法，在返回内容前进行国际化
+			@Override
+			protected void writeInternal(Object object, Type type, HttpOutputMessage outputMessage) throws IOException, HttpMessageNotWritableException {
+				if(object instanceof HelloResponse) {
+					HelloResponse o = (HelloResponse)object;
+					o.getProperties().put("i18n", "Are you here?");
+				}
+				super.writeInternal(object, type, outputMessage);
+			}
+		};
+	}
 }
