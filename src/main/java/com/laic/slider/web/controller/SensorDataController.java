@@ -5,6 +5,9 @@ import com.github.pagehelper.PageInfo;
 import com.laic.slider.api.enums.CodeEnum;
 import com.laic.slider.api.model.*;
 import com.laic.slider.api.request.CommonRequest;
+import com.laic.slider.api.request.CreateChecker;
+import com.laic.slider.api.request.CreateChecks;
+import com.laic.slider.api.request.HelloRequest;
 import com.laic.slider.api.response.CommonResponse;
 import com.laic.slider.api.response.DataResponse;
 import com.laic.slider.api.response.HelloResponse;
@@ -23,6 +26,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.groups.Default;
 import java.util.Date;
 import java.util.List;
 
@@ -147,6 +151,13 @@ public class SensorDataController extends BaseController{
 
     @RequestMapping(value = "/hello")
     public HelloResponse hello(@Value("#{request.getAttribute('data')}") String data) {
+
+        HelloRequest request = JSONObject.parseObject(data, HelloRequest.class);
+        if(request.getFrom() == null) {
+            validate(request, CreateChecker.class);
+        } else {
+            validate(request);
+        }
 
         HelloResponse response = new HelloResponse();
         response.setResponse(CodeEnum.SUCCESS);
