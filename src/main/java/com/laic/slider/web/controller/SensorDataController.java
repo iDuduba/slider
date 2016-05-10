@@ -23,6 +23,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -150,6 +151,8 @@ public class SensorDataController extends BaseController{
         HelloResponse response = new HelloResponse();
         response.setResponse(CodeEnum.SUCCESS);
 
+        response.setJpName("bageyalu");
+        response.setGo(new Date());
         response.add("serverApiVersion", versionConfig.getVersion());
         response.add("scmRevision", versionConfig.getRevision());
         response.add("scmTime", versionConfig.getTimestamp());
