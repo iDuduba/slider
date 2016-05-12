@@ -54,7 +54,7 @@ public class SensorDataController extends BaseController{
     @Autowired
     private InclinometerService inclinometerService;
 
-    @Cacheable
+//    @Cacheable
     @RequestMapping(value = "/rains")
     public DataResponse<Raingauge> rain(@Value("#{request.getAttribute('data')}") String data) {
 
@@ -65,7 +65,7 @@ public class SensorDataController extends BaseController{
                 request.getBeginTime(),
                 request.getEndTime(),
                 request.getPage(),
-                request.getRows());
+                request.getPageSize());
 
         DataResponse<Raingauge> response = new DataResponse<>();
         PageInfo pageInfo = new PageInfo<Raingauge>(rs);
@@ -88,7 +88,7 @@ public class SensorDataController extends BaseController{
                 request.getBeginTime(),
                 request.getEndTime(),
                 request.getPage(),
-                request.getRows());
+                request.getPageSize());
 
         DataResponse<Pressure> response = new DataResponse<>();
         PageInfo pageInfo = new PageInfo<Pressure>(rs);
@@ -111,7 +111,7 @@ public class SensorDataController extends BaseController{
                 request.getBeginTime(),
                 request.getEndTime(),
                 request.getPage(),
-                request.getRows());
+                request.getPageSize());
 
         DataResponse<Humidistat> response = new DataResponse<>();
 //        response.setPageInfo(new PageInfo<Humidistat>(rs));
@@ -135,7 +135,7 @@ public class SensorDataController extends BaseController{
                 request.getBeginTime(),
                 request.getEndTime(),
                 request.getPage(),
-                request.getRows());
+                request.getPageSize());
 
         DataResponse<Inclinometer> response = new DataResponse<>();
 //        response.setPageInfo(new PageInfo<Inclinometer>(rs));

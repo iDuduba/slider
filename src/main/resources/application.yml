@@ -1,5 +1,5 @@
 server:
-    port: 8080
+    port: 7788
     context-path: /api    
   
 spring:
@@ -25,5 +25,6 @@ api:
   version: 1.2
   secretKey: '[5)JL\">jTD$B+!mP`tM|eS^E-_#03gHa?v{nC<wq'
   skipSign: true
+  debug: true
 
   

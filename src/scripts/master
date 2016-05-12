@@ -52,8 +52,9 @@ for jarfile in `ls lib/.`; do
     CLASSPATH="${CLASSPATH}:lib/$jarfile"
 done
 
+JAVA_OPTS="-Dlogging.config=file:config/logback-spring.xml"
 if ${CONSOLE}; then
-  JAVA_OPTS="-Dlogging.config=file:config/logback-console.xml"
+  JAVA_OPTS="${JAVA_OPTS} -Dspring.profiles.active=dev"
 fi
 
 if [ ! -z "${INSTANCE}" ]; then

@@ -36,13 +36,13 @@ public class SecurityInterceptor extends HandlerInterceptorAdapter {
 		String data = request.getParameter("data");
 		if(Strings.isNullOrEmpty(data)) {
 			CommonResponse comResponse = new CommonResponse();
-			comResponse.setResponse(CodeEnum.FAIL);
+			comResponse.setResponse(CodeEnum.NO_DATA_PARA);
 			response.setStatus(HttpStatus.BAD_REQUEST.value());
 			response.getWriter().write(JSONObject.toJSONString(comResponse));
 			return false;
 		}
 		String decodedData = URLDecoder.decode(data,"UTF-8");
-		log.debug(">>> {} : {}", request.getRequestURI(), decodedData);
+		log.info(">>> {} : {}", request.getRequestURI(), decodedData);
 		request.setAttribute("data", decodedData);
 
 		if (!skipSign) {

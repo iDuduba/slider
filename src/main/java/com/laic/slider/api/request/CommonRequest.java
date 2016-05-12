@@ -34,7 +34,7 @@ public class CommonRequest extends BaseRequest {
 
     @Min(1)
     @Max(500)
-    private Integer rows;
+    private Integer pageSize;
 
     public DateTime getBeginTime() {
         return DateTime.parse(from, formatter);

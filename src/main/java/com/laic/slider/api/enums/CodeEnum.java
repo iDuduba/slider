@@ -13,7 +13,6 @@ public enum CodeEnum {
 	SERVICE_UNAVAILABLE("0503", "服务不可用，稍后再试"),
 
 
-	FAIL("9999", "系统内部异常,请稍候再试."),
 
 	USERNAME_ERROR("1000", "无效的用户名"),
 	PASSWORD_ERROR("1001", "口令错误"),
@@ -22,7 +21,10 @@ public enum CodeEnum {
 	UPLOAD_EXCEED("5001", "上传文件大小超过限制"),
 
 	SMS_EERROR("5100","发送短信失败"),
-	MD5_ERROR("9998", "无效的请求签名.");
+
+	NO_DATA_PARA("9997", "无效的DATA参数"),
+	MD5_ERROR("9998", "无效的请求签名."),
+	FAIL("9999", "系统内部异常,请稍候再试.");
 
 	private String code;
 	private String msg;
