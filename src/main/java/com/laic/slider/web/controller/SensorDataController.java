@@ -6,10 +6,10 @@ import com.laic.slider.api.enums.CodeEnum;
 import com.laic.slider.api.model.*;
 import com.laic.slider.api.request.CommonRequest;
 import com.laic.slider.api.request.CreateChecker;
-import com.laic.slider.api.request.CreateChecks;
 import com.laic.slider.api.request.HelloRequest;
 import com.laic.slider.api.response.CommonResponse;
 import com.laic.slider.api.response.DataResponse;
+import com.laic.slider.api.response.Foo;
 import com.laic.slider.api.response.HelloResponse;
 import com.laic.slider.api.service.HumidistatService;
 import com.laic.slider.api.service.InclinometerService;
@@ -22,11 +22,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.groups.Default;
 import java.util.Date;
 import java.util.List;
 
@@ -160,9 +158,17 @@ public class SensorDataController extends BaseController{
         }
 
         HelloResponse response = new HelloResponse();
+//        response.setLanguage(LangEnum.JP);
         response.setResponse(CodeEnum.SUCCESS);
 
+        Foo foo = new Foo();
+//        foo.setJpName("xxxxx");
+        foo.setCnName("日本沉没");
+        foo.setAge(112);
+
+        response.setFoo(foo);
         response.setJpName("bageyalu");
+        response.setCnName("踩你妈,日本鬼子");
         response.setGo(new Date());
         response.add("serverApiVersion", versionConfig.getVersion());
         response.add("scmRevision", versionConfig.getRevision());

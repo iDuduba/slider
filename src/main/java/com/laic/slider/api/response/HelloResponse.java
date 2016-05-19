@@ -4,26 +4,31 @@
  */
 package com.laic.slider.api.response;
 
-import java.util.Date;
-import java.util.Properties;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.laic.slider.config.I18n;
 import lombok.Data;
+
+import java.util.Date;
+import java.util.Properties;
 
 /**
  * @author duduba
  * 
  */
-@I18n
 @Data
 public class HelloResponse extends BaseResponse {
 
-    @I18n(codeType = "China", code = "jpName")
+    @I18n
     private String name;
 
     @JsonIgnore
     private String jpName;
+
+    @JsonIgnore
+    private String cnName;
+
+    @I18n
+    private Foo foo;
 
     private Date go;
 

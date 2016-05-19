@@ -5,23 +5,20 @@
 
 package com.laic.slider.config;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.laic.slider.api.response.HelloResponse;
+import com.laic.slider.api.enums.LangEnum;
 import com.laic.slider.web.interceptor.ExecuteTimeInterceptor;
 import com.laic.slider.web.interceptor.SecurityInterceptor;
 import org.apache.catalina.filters.RemoteIpFilter;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpOutputMessage;
-import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.HttpMessageNotWritableException;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.stereotype.Component;
+import org.springframework.util.ReflectionUtils;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -30,7 +27,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
-import java.util.List;
+
+import static org.springframework.util.ReflectionUtils.findField;
+import static org.springframework.util.ReflectionUtils.getField;
 
 /**
  * @author dly
@@ -87,27 +86,42 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
 		//重写writeInternal方法，在返回内容前进行国际化
 		@Override
 		protected void writeInternal(Object object, Type type, HttpOutputMessage outputMessage) throws IOException, HttpMessageNotWritableException {
-			// Todo : add else
-			Class<?> clazz = object.getClass();
-			if(clazz.isAnnotationPresent(I18n.class)) {
-				Field[] fields = clazz.getDeclaredFields();
-				for(Field field : fields) {
-					if (field.isAnnotationPresent(I18n.class)) {
-						field.setAccessible(true);
-						I18n i18n = field.getAnnotation(I18n.class);
-						String codeType = i18n.codeType();
-						String code = i18n.code();
-						try {
-							Field codeField = clazz.getDeclaredField(code);
-							codeField.setAccessible(true);
-							field.set(object, codeType + "." + codeField.get(object));
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-					}
+			Field langField = ReflectionUtils.findField(object.getClass(), "language", LangEnum.class);
+			if(langField != null) {
+				ReflectionUtils.makeAccessible(langField);
+				LangEnum language = (LangEnum) ReflectionUtils.getField(langField, object);
+				if (language != null) {
+					translate(object, language);
 				}
 			}
 			super.writeInternal(object, type, outputMessage);
+		}
+
+		private void translate(final Object object, final LangEnum language) {
+			final Class<?> clazz = object.getClass();
+			ReflectionUtils.doWithFields(clazz, new ReflectionUtils.FieldCallback() {
+				@Override
+				public void doWith(Field field) throws IllegalArgumentException, IllegalAccessException {
+					if (field.isAnnotationPresent(I18n.class)) {
+						Class<?> fClazz = field.getType();
+						ReflectionUtils.makeAccessible(field);
+						if(fClazz == String.class) {
+							String refFieldName = language.getCode() + StringUtils.capitalize(field.getName());
+							Field refField = ReflectionUtils.findField(clazz, refFieldName, String.class);
+							if(refField != null) {
+								ReflectionUtils.makeAccessible(refField);
+								String v = (String) ReflectionUtils.getField(refField, object);
+								ReflectionUtils.setField(field, object, v);
+							}
+						} else {
+							if(fClazz.isAnnotationPresent(I18n.class)) {
+								Object o = ReflectionUtils.getField(field, object);
+								translate(o, language);
+							}
+						}
+					}
+				}
+			});
 		}
 	}
 }
