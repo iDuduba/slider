@@ -2,42 +2,35 @@
 <configuration>
     <!--<include resource="org/springframework/boot/logging/logback/base.xml" />-->
 
-    <appender name="consoleAppender" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder>
-            <Pattern>.%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg %n</Pattern>
-        </encoder>
-        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-            <level>TRACE</level>
-        </filter>
-    </appender>
+    <springProfile name="dev,console">
+        <appender name="LOGFILE" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder>
+                <Pattern>.%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg %n</Pattern>
+            </encoder>
+            <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+                <level>TRACE</level>
+            </filter>
+        </appender>
+    </springProfile>
 
-    <appender name="dailyRollingFileAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <File>log/app.log</File>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <!-- daily rollover -->
-            <FileNamePattern>slider.%d{yyyy-MM-dd}.log</FileNamePattern>
-            <!-- keep 30 days' worth of history -->
-            <maxHistory>30</maxHistory>
-        </rollingPolicy>
-        <encoder>
-            <Pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{35} - %msg %n</Pattern>
-        </encoder>
-    </appender>
+    <springProfile name="prod">
+        <appender name="LOGFILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <File>log/splider.log</File>
+            <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                <!-- daily rollover -->
+                <FileNamePattern>slider.%d{yyyy-MM-dd}.log</FileNamePattern>
+                <!-- keep 30 days' worth of history -->
+                <maxHistory>30</maxHistory>
+            </rollingPolicy>
+            <layout class="ch.qos.logback.classic.PatternLayout">
+                <pattern>%date [%thread] %-5level %logger{48} - %msg%n</pattern>
+            </layout>
+        </appender>
+    </springProfile>
 
-    <!--<springProfile name="dev">-->
-        <root>
-            <level value="INFO" />
-            <appender-ref ref="consoleAppender" />
-        </root>
-        <logger name="com.laic.slider" level="DEBUG" />
-    <!--</springProfile>-->
-
-    <!--<springProfile name="!dev">-->
-        <!--<root>-->
-            <!--<level value="INFO" />-->
-            <!--<appender-ref ref="dailyRollingFileAppender" />-->
-        <!--</root>-->
-        <!--<logger name="com.laic.slider" level="INFO" />-->
-    <!--</springProfile>-->
+    <root level="INFO">
+        <appender-ref ref="LOGFILE" />
+    </root>
+    <logger name="com.laic.slider" level="DEBUG" />
 
 </configuration>

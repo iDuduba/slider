@@ -45,7 +45,7 @@
 	    </fileSet>
 		<fileSet>
 			<directory>${project.build.directory}</directory>
-			<outputDirectory/>
+			<outputDirectory>lib</outputDirectory>
 			<includes>
 				<include>*.jar</include>
 			</includes>
