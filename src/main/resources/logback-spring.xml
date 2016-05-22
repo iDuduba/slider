@@ -21,10 +21,11 @@
                 <FileNamePattern>slider.%d{yyyy-MM-dd}.log</FileNamePattern>
                 <!-- keep 30 days' worth of history -->
                 <maxHistory>30</maxHistory>
+                <totalSizeCap>3GB</totalSizeCap>
             </rollingPolicy>
-            <layout class="ch.qos.logback.classic.PatternLayout">
+            <encoder>
                 <pattern>%date [%thread] %-5level %logger{48} - %msg%n</pattern>
-            </layout>
+            </encoder>
         </appender>
     </springProfile>
 

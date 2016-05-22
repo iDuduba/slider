@@ -9,7 +9,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.laic.slider.api.enums.LangEnum;
 import com.laic.slider.web.interceptor.ExecuteTimeInterceptor;
 import com.laic.slider.web.interceptor.SecurityInterceptor;
-import org.apache.catalina.filters.RemoteIpFilter;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.EnableCaching;
@@ -58,10 +57,10 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
 	}
 
 	// 将代理服务器发来的请求包含的IP地址转换成真正的用户IP
-	@Bean
-    public RemoteIpFilter remoteIpFilter() {
-        return new RemoteIpFilter();
-    }
+//	@Bean
+//    public RemoteIpFilter remoteIpFilter() {
+//        return new RemoteIpFilter();
+//    }
 
 	@Autowired
 	ObjectMapper objectMapper;
